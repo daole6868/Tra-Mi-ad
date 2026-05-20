@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — AccTraMi</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'HYWenHei';
+            src: url('zhcn.ttf') format('truetype');
+            font-weight: 400 900;
+            font-display: swap;
+        }
+
+        :root {
+            --bg-deep: #0a0e1a;
+            --bg-surface: #111728;
+            --bg-elevated: #1a2138;
+            --bg-card: #151c30;
+            --border: rgba(120, 140, 200, 0.12);
+            --border-strong: rgba(120, 140, 200, 0.25);
+            --text-primary: #e8ecf5;
+            --text-secondary: #8a93ad;
+            --text-muted: #5a6378;
+            --accent: #00ffa3;
+            --accent-dim: #00cc82;
+            --accent-glow: rgba(0, 255, 163, 0.15);
+            --gold: #ffb627;
+            --danger: #ff4757;
+            --info: #00d4ff;
+            --purple: #a78bfa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'HYWenHei', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 15% 10%, rgba(0, 255, 163, 0.06) 0%, transparent 40%),
+                linear-gradient(180deg, var(--bg-deep) 0%, #060912 100%);
+            background-attachment: fixed;
+        }
+
+        /* ── Login ── */
+        .login-page {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 24px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, .5);
+        }
+
+        .login-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+
+        .login-logo-mark {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent), var(--info));
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: var(--bg-deep);
+            font-weight: 800;
+            font-size: 22px;
+            box-shadow: 0 0 25px var(--accent-glow);
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        /* ── Dashboard ── */
+        .dashboard {
+            display: none;
+        }
+
+        .topbar {
+            background: rgba(17, 23, 40, .9);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(20px);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .topbar-logo-mark {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--info));
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            color: var(--bg-deep);
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .topbar-badge {
+            background: var(--accent-glow);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .user-email {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ── Tabs ── */
+        .tab-nav {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            display: flex;
+            gap: 0;
+        }
+
+        .tab-btn {
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all .2s;
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-glow), transparent 70%);
+            opacity: .5;
+            pointer-events: none;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-value.green {
+            color: var(--accent);
+        }
+
+        .stat-value.gold {
+            color: var(--gold);
+        }
+
+        .stat-value.purple {
+            color: var(--purple);
+        }
+
+        .toolbar {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-search {
+            flex: 1;
+            min-width: 200px;
+            background: var(--bg-deep);
+            border: 1px solid var(--border-strong);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .toolbar-search:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all .2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-deep);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dim);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+
+        .btn-primary:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-ghost {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-strong);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-danger {
+            background: rgba(255, 71, 87, .15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, .3);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-purple {
+            background: rgba(167, 139, 250, .15);
+            color: var(--purple);
+            border: 1px solid rgba(167, 139, 250, .3);
+        }
+
+        .btn-purple:hover {
+            background: var(--purple);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 13px;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+            padding: 14px;
+            font-size: 15px;
+        }
+
+        /* ── Table ── */
+        .table-wrap {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: var(--bg-elevated);
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--bg-elevated);
+        }
+
+        .cell-img-wrap {
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .cell-img {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: contain;
+            object-position: center;
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            display: block;
+        }
+
+        .cell-img-placeholder {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            display: grid;
+            place-items: center;
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+
+        .cell-desc {
+            max-width: 340px;
+            color: var(--text-primary);
+        }
+
+        .cell-game {
+            background: var(--accent-glow);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .cell-cat {
+            background: rgba(167, 139, 250, .15);
+            color: var(--purple);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .cell-price {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge-active {
+            background: var(--accent-glow);
+            color: var(--accent);
+            border: 1px solid rgba(0, 255, 163, .3);
+        }
+
+        .status-badge-sold {
+            background: rgba(255, 71, 87, .15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, .3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-active {
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .status-sold-dot {
+            background: var(--danger);
+        }
+
+        .actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        /* ── Category cards ── */
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .cat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: border-color .2s, transform .2s;
+            cursor: default;
+        }
+
+        .cat-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+
+        .cat-card-img {
+            width: 100%;
+            aspect-ratio: 16/7;
+            object-fit: contain;
+            object-position: center;
+            background: var(--bg-deep);
+            display: block;
+        }
+
+        .cat-card-img-placeholder {
+            width: 100%;
+            aspect-ratio: 16/7;
+            background: var(--bg-elevated);
+            display: grid;
+            place-items: center;
+            color: var(--text-muted);
+            font-size: 32px;
+        }
+
+        .cat-card-body {
+            padding: 16px;
+        }
+
+        .cat-card-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .cat-card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            min-height: 20px;
+        }
+
+        .cat-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cat-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--bg-elevated);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .cat-card-actions {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        /* ── Modals ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 8, 16, .85);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn .2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 24px;
+            max-width: 640px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-surface);
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: 1px solid var(--border-strong);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 28px;
+        }
+
+        .modal-footer {
+            padding: 20px 28px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-surface);
+        }
+
+        /* ── Forms ── */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-label .required {
+            color: var(--danger);
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            background: var(--bg-deep);
+            border: 1px solid var(--border-strong);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all .2s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .form-select option {
+            background: var(--bg-deep);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .form-help {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .status-toggle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .status-option {
+            cursor: pointer;
+        }
+
+        .status-option input[type="radio"] {
+            display: none;
+        }
+
+        .status-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-deep);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            transition: all .2s;
+            cursor: pointer;
+        }
+
+        .status-option input[type="radio"]:checked+.status-btn-active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .status-option input[type="radio"]:checked+.status-btn-sold {
+            background: rgba(255, 71, 87, .15);
+            border-color: var(--danger);
+            color: var(--danger);
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, .1);
+        }
+
+        .status-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .status-btn-sold:hover {
+            border-color: var(--danger);
+        }
+
+        .status-dot-active {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .status-dot-sold {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .image-upload {
+            background: var(--bg-deep);
+            border: 2px dashed var(--border-strong);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            position: relative;
+        }
+
+        .image-upload:hover {
+            border-color: var(--accent);
+            background: var(--bg-elevated);
+        }
+
+        .image-upload.has-image {
+            padding: 0;
+            border-style: solid;
+            overflow: hidden;
+        }
+
+        .image-upload input[type="file"] {
+            display: none;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-height: 280px;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+            background: var(--bg-deep);
+        }
+
+        .image-upload-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .image-upload-text strong {
+            color: var(--accent);
+        }
+
+        .image-upload-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: .5;
+        }
+
+        .upload-progress {
+            background: var(--bg-elevated);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        .upload-progress.show {
+            display: block;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--accent);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .toast.success .toast-icon {
+            background: var(--accent);
+            color: var(--bg-deep);
+        }
+
+        .toast.error .toast-icon {
+            background: var(--danger);
+            color: white;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty .icon {
+            font-size: 48px;
+            opacity: .3;
+            margin-bottom: 12px;
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .topbar {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .tab-nav {
+                padding: 0 16px;
+                overflow-x: auto;
+            }
+
+            .tab-btn {
+                white-space: nowrap;
+                padding: 14px 16px;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-value {
+                font-size: 22px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                max-height: 95vh;
+                border-radius: 16px;
+            }
+
+            .modal-body,
+            .modal-header,
+            .modal-footer {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .form-input,
+            .form-textarea,
+            .form-select {
+                font-size: 16px;
+            }
+
+            .cat-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .cat-card-body {
+                padding: 12px;
+            }
+
+            .cat-card-name {
+                font-size: 14px;
+            }
+
+            .table-wrap {
+                background: transparent;
+                border: none;
+            }
+
+            .table-scroll {
+                overflow: visible;
+            }
+
+            table {
+                min-width: 0;
+                display: block;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tbody,
+            tr {
+                display: block;
+                width: 100%;
+            }
+
+            tr {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                margin-bottom: 12px;
+                padding: 14px;
+            }
+
+            tr:hover td {
+                background: transparent;
+            }
+
+            td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 6px 0;
+                border-bottom: none;
+                gap: 12px;
+            }
+
+            td:before {
+                content: attr(data-label);
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                color: var(--text-muted);
+                font-weight: 700;
+                flex-shrink: 0;
+            }
+
+            td.mobile-hide-label:before {
+                content: '';
+                display: none;
+            }
+
+            td.mobile-full {
+                display: block;
+                padding-top: 0;
+            }
+
+            td.mobile-full:before {
+                display: none;
+            }
+
+            .cell-desc {
+                max-width: none;
+                text-align: right;
+                font-size: 13px;
+            }
+
+            .cell-img {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+                object-fit: contain;
+            }
+
+            .cell-img-placeholder {
+                width: 100%;
+                height: 120px;
+            }
+
+            .actions {
+                gap: 8px;
+                width: 100%;
+            }
+
+            .actions .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+    <div id="loginPage" class="login-page">
+        <div class="login-box">
+            <div class="login-logo">
+                <div class="login-logo-mark">T</div>
+                <div style="font-size:22px;font-weight:800;">AccTraMi</div>
+            </div>
+            <div class="login-title">Đăng nhập quản trị</div>
+            <div class="login-subtitle">Nhập email và mật khẩu admin để tiếp tục</div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="admin@acc.vip" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Đăng nhập →</button>
+            </form>
+            <div id="loginError"
+                style="color:var(--danger);margin-top:16px;font-size:13px;text-align:center;display:none;"></div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="dashboard">
+        <div class="topbar">
+            <div class="topbar-left">
+                <div class="topbar-logo">
+                    <div class="topbar-logo-mark">T</div>
+                    AccTraMi
+                </div>
+                <span class="topbar-badge">Admin</span>
+            </div>
+            <div class="user-info">
+                <span>Đăng nhập với:</span>
+                <span class="user-email" id="userEmail">—</span>
+                <button class="btn btn-ghost btn-sm" id="logoutBtn">Đăng xuất</button>
+            </div>
+        </div>
+
+        <!-- Tab nav -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('accounts')">🎮 Quản lý Acc</button>
+            <button class="tab-btn" onclick="switchTab('categories')">📂 Quản lý Danh mục</button>
+        </div>
+
+        <!-- TAB: ACCOUNTS -->
+        <div id="tab-accounts" class="tab-panel active">
+            <div class="container">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Quản lý acc game</h1>
+                        <p class="page-subtitle">Thêm, sửa, xóa các tài khoản đang bán</p>
+                    </div>
+                    <button class="btn btn-primary" id="addAccBtn">+ Thêm acc mới</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Tổng số acc</div>
+                        <div class="stat-value" id="statTotal">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Đang bán</div>
+                        <div class="stat-value green" id="statActive">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Đã bán</div>
+                        <div class="stat-value" id="statSold" style="color:var(--text-muted);">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Tổng giá trị kho</div>
+                        <div class="stat-value gold" id="statValue">0đ</div>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <input type="text" id="searchBox" class="toolbar-search" placeholder="🔍 Tìm theo mô tả, game...">
+                    <select id="filterCategory" class="form-select" style="width:auto;min-width:160px;">
+                        <option value="all">Tất cả danh mục</option>
+                    </select>
+                    <select id="filterGame" class="form-select" style="width:auto;min-width:160px;">
+                        <option value="all">Tất cả game</option>
+                    </select>
+                    <select id="filterStatus" class="form-select" style="width:auto;min-width:140px;">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="active">Đang bán</option>
+                        <option value="inactive">Đã bán</option>
+                    </select>
+                </div>
+
+                <div class="table-wrap">
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:90px;">Ảnh</th>
+                                    <th>Mô tả</th>
+                                    <th>Danh mục</th>
+                                    <th>Game</th>
+                                    <th>Giá</th>
+                                    <th>Trạng thái</th>
+                                    <th style="text-align:right;">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: CATEGORIES -->
+        <div id="tab-categories" class="tab-panel">
+            <div class="container">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Quản lý Danh mục</h1>
+                        <p class="page-subtitle">Tạo danh mục để phân loại acc theo game</p>
+                    </div>
+                    <button class="btn btn-primary" id="addCatBtn">+ Thêm danh mục</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Tổng danh mục</div>
+                        <div class="stat-value purple" id="statCatTotal">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Có ảnh đại diện</div>
+                        <div class="stat-value green" id="statCatWithImg">0</div>
+                    </div>
+                </div>
+
+                <div id="catGrid" class="cat-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ACC FORM -->
+    <div class="modal-overlay" id="accModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="accModalTitle">Thêm acc mới</div>
+                <button class="modal-close" onclick="closeAccForm()">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="accForm">
+                    <div class="form-group">
+                        <label class="form-label">Ảnh acc</label>
+                        <div class="image-upload" id="accImgUpload"
+                            onclick="document.getElementById('f_image').click()">
+                            <input type="file" id="f_image" accept="image/*">
+                            <div id="accUploadPlaceholder">
+                                <div class="image-upload-icon">📷</div>
+                                <div class="image-upload-text"><strong>Bấm để tải ảnh lên</strong><br>JPG, PNG, WebP
+                                    (tối đa 5MB)</div>
+                            </div>
+                            <img id="accPreviewImg" class="image-preview" style="display:none;" alt="Preview">
+                        </div>
+                        <div id="accImgActions"
+                            style="display:none;margin-top:8px;display:none;gap:8px;flex-wrap:wrap;">
+                            <button type="button" class="btn btn-ghost btn-sm"
+                                onclick="document.getElementById('f_image').click()">Đổi ảnh</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeAccImage()">Xóa
+                                ảnh</button>
+                        </div>
+                        <div class="upload-progress" id="accUploadProgress">Đang tải ảnh lên...</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Danh mục</label>
+                        <select id="f_category" class="form-select">
+                            <option value="">— Không có danh mục —</option>
+                        </select>
+                        <div class="form-help">Chọn danh mục để acc hiển thị trong danh mục đó trên trang user</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Game <span class="required">*</span></label>
+                            <input type="text" id="f_game" class="form-input" placeholder="Genshin Impact" required
+                                list="gameList">
+                            <datalist id="gameList"></datalist>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Giá (VND) <span class="required">*</span></label>
+                            <input type="number" id="f_price" class="form-input" placeholder="1000000" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Mô tả ngắn <span class="required">*</span></label>
+                        <textarea id="f_short_desc" class="form-textarea" placeholder="Char, Cung Mệnh,..."
+                            style="min-height:80px;" required></textarea>
+                        <div class="form-help">Hiển thị trên card sản phẩm</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Mô tả đầy đủ</label>
+                        <textarea id="f_full_desc" class="form-textarea" placeholder="Mô tả chi tiết..."></textarea>
+                        <div class="form-help">Để trống sẽ dùng mô tả ngắn</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Trạng thái</label>
+                        <div class="status-toggle">
+                            <label class="status-option">
+                                <input type="radio" name="f_status" value="active" checked>
+                                <span class="status-btn status-btn-active">
+                                    <span class="status-dot status-dot-active"></span>Đang bán
+                                </span>
+                            </label>
+                            <label class="status-option">
+                                <input type="radio" name="f_status" value="sold">
+                                <span class="status-btn status-btn-sold">
+                                    <span class="status-dot status-dot-sold"></span>Đã bán
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-help">Chỉ acc "Đang bán" mới hiển thị trên web cho khách xem</div>
+                    </div>
+
+                    <input type="hidden" id="f_image_url">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="closeAccForm()">Hủy</button>
+                <button type="button" class="btn btn-primary" id="saveAccBtn">Lưu acc</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CATEGORY FORM -->
+    <div class="modal-overlay" id="catModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="catModalTitle">Thêm danh mục</div>
+                <button class="modal-close" onclick="closeCatForm()">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="catForm">
+                    <div class="form-group">
+                        <label class="form-label">Ảnh danh mục</label>
+                        <div class="image-upload" id="catImgUpload"
+                            onclick="document.getElementById('cf_image').click()">
+                            <input type="file" id="cf_image" accept="image/*">
+                            <div id="catUploadPlaceholder">
+                                <div class="image-upload-icon">🖼️</div>
+                                <div class="image-upload-text"><strong>Bấm để tải ảnh lên</strong><br>Tỉ lệ 16:7 trông
+                                    đẹp nhất</div>
+                            </div>
+                            <img id="catPreviewImg" class="image-preview" style="display:none;" alt="Preview">
+                        </div>
+                        <div id="catImgActions" style="display:none;margin-top:8px;gap:8px;flex-wrap:wrap;">
+                            <button type="button" class="btn btn-ghost btn-sm"
+                                onclick="document.getElementById('cf_image').click()">Đổi ảnh</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeCatImage()">Xóa
+                                ảnh</button>
+                        </div>
+                        <div class="upload-progress" id="catUploadProgress">Đang tải ảnh lên...</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tên danh mục <span class="required">*</span></label>
+                        <input type="text" id="cf_name" class="form-input" placeholder="Genshin Impact" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Mô tả (tuỳ chọn)</label>
+                        <textarea id="cf_desc" class="form-textarea" placeholder="Mô tả ngắn về danh mục này..."
+                            style="min-height:80px;"></textarea>
+                    </div>
+
+                    <input type="hidden" id="cf_image_url">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="closeCatForm()">Hủy</button>
+                <button type="button" class="btn btn-primary" id="saveCatBtn">Lưu danh mục</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DELETE ACC -->
+    <div class="modal-overlay" id="deleteAccModal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <div class="modal-title">Xác nhận xóa acc</div>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc muốn xóa acc này?</p>
+                <p style="color:var(--text-muted);margin-top:8px;font-size:13px;">Hành động này không thể hoàn tác. Ảnh
+                    sẽ bị xóa khỏi server.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeDeleteAcc()">Hủy</button>
+                <button class="btn btn-danger" id="confirmDeleteAccBtn">Xóa vĩnh viễn</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DELETE CATEGORY -->
+    <div class="modal-overlay" id="deleteCatModal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <div class="modal-title">Xác nhận xóa danh mục</div>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc muốn xóa danh mục này?</p>
+                <p style="color:var(--text-muted);margin-top:8px;font-size:13px;">Các acc trong danh mục này sẽ
+                    <strong>không bị xóa</strong>, chỉ mất liên kết với danh mục. Ảnh danh mục sẽ bị xóa.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeDeleteCat()">Hủy</button>
+                <button class="btn btn-danger" id="confirmDeleteCatBtn">Xóa danh mục</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <div class="toast-icon" id="toastIcon">✓</div>
+        <div id="toastMessage">Đã lưu</div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://natutwbueumxzwkuscdq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hdHV0d2J1ZXVteHp3a3VzY2RxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNjI5NjQsImV4cCI6MjA5MzkzODk2NH0.rbR-LfcCs1FK38BcsoHgbbFfpifVnELtadMmuJRVrig';
+        const STORAGE_BUCKET = 'acc-images';
+        const CAT_BUCKET = 'category-images'; // bucket riêng cho ảnh danh mục (tạo trong Supabase nếu chưa có, hoặc dùng acc-images)
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let allAccounts = [];
+        let allCategories = [];
+        let editingAccId = null;
+        let deletingAcc = null;
+        let editingCatId = null;
+        let deletingCat = null;
+        let currentAccImageUrl = '';
+        let oldAccImageUrl = '';
+        let currentCatImageUrl = '';
+        let oldCatImageUrl = '';
+
+        const $ = id => document.getElementById(id);
+        const formatPrice = n => Number(n || 0).toLocaleString('vi-VN') + 'đ';
+
+        function toast(message, type = 'success') {
+            const t = $('toast');
+            t.className = 'toast show ' + type;
+            $('toastIcon').textContent = type === 'success' ? '✓' : '!';
+            $('toastMessage').textContent = message;
+            setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        /* ── Tab switching ── */
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', ['accounts', 'categories'][i] === tab);
+            });
+            $('tab-accounts').classList.toggle('active', tab === 'accounts');
+            $('tab-categories').classList.toggle('active', tab === 'categories');
+        }
+
+        /* ── Auth ── */
+        async function checkSession() {
+            const { data: { session } } = await db.auth.getSession();
+            if (session) showDashboard(session.user);
+            else {
+                $('loginPage').style.display = 'grid';
+                $('dashboard').style.display = 'none';
+            }
+        }
+
+        $('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            $('loginError').style.display = 'none';
+            const { data, error } = await db.auth.signInWithPassword({
+                email: $('loginEmail').value,
+                password: $('loginPassword').value
+            });
+            if (error) {
+                $('loginError').textContent = 'Sai email hoặc mật khẩu';
+                $('loginError').style.display = 'block';
+                return;
+            }
+            showDashboard(data.user);
+        };
+
+        function showDashboard(user) {
+            $('loginPage').style.display = 'none';
+            $('dashboard').style.display = 'block';
+            $('userEmail').textContent = user.email;
+            loadAll();
+        }
+
+        $('logoutBtn').onclick = async () => { await db.auth.signOut(); location.reload(); };
+
+        /* ── Load all data ── */
+        async function loadAll() {
+            await Promise.all([loadCategories(), loadAccounts()]);
+        }
+
+        /* ── CATEGORIES ── */
+        async function loadCategories() {
+            const { data, error } = await db.from('categories').select('*').order('created_at', { ascending: true });
+            if (error) { toast('Lỗi tải danh mục: ' + error.message, 'error'); return; }
+            allCategories = data || [];
+            updateCatStats();
+            renderCatGrid();
+            populateCategorySelects();
+        }
+
+        function updateCatStats() {
+            $('statCatTotal').textContent = allCategories.length;
+            $('statCatWithImg').textContent = allCategories.filter(c => c.image_url).length;
+        }
+
+        function renderCatGrid() {
+            const grid = $('catGrid');
+            if (allCategories.length === 0) {
+                grid.innerHTML = `<div class="empty" style="grid-column:1/-1;"><div class="icon">📂</div>Chưa có danh mục nào</div>`;
+                return;
+            }
+            grid.innerHTML = allCategories.map(c => {
+                const accCount = allAccounts.filter(a => a.category_id === c.id).length;
+                return `
+        <div class="cat-card">
+            ${c.image_url
+                        ? `<img src="${c.image_url}" class="cat-card-img" alt="${c.name}" onerror="this.outerHTML='<div class=&quot;cat-card-img-placeholder&quot;>🖼️</div>'">`
+                        : `<div class="cat-card-img-placeholder">🎮</div>`
+                    }
+            <div class="cat-card-body">
+                <div class="cat-card-name">${c.name}</div>
+                <div class="cat-card-desc">${c.description || '<span style="color:var(--text-muted);font-style:italic;">Không có mô tả</span>'}</div>
+                <div class="cat-card-meta">
+                    <span class="cat-count">${accCount} acc</span>
+                    <div class="cat-card-actions">
+                        <button class="btn btn-ghost btn-sm" onclick="editCat(${c.id})">Sửa</button>
+                        <button class="btn btn-danger btn-sm" onclick="askDeleteCat(${c.id})">Xóa</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+            }).join('');
+        }
+
+        function populateCategorySelects() {
+            // Filter dropdown in acc tab
+            $('filterCategory').innerHTML = '<option value="all">Tất cả danh mục</option>' +
+                allCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            // Form select
+            $('f_category').innerHTML = '<option value="">— Không có danh mục —</option>' +
+                allCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
+        /* Category form */
+        $('addCatBtn').onclick = () => openCatForm();
+
+        function openCatForm(cat = null) {
+            editingCatId = cat ? cat.id : null;
+            $('catModalTitle').textContent = cat ? 'Sửa danh mục' : 'Thêm danh mục mới';
+            $('cf_name').value = cat?.name || '';
+            $('cf_desc').value = cat?.description || '';
+            currentCatImageUrl = cat?.image_url || '';
+            oldCatImageUrl = cat?.image_url || '';
+            $('cf_image_url').value = currentCatImageUrl;
+            setCatImageUI(currentCatImageUrl);
+            $('catUploadProgress').classList.remove('show');
+            $('catModal').classList.add('active');
+        }
+
+        function setCatImageUI(url) {
+            if (url) {
+                $('catPreviewImg').src = url;
+                $('catPreviewImg').style.display = 'block';
+                $('catUploadPlaceholder').style.display = 'none';
+                $('catImgUpload').classList.add('has-image');
+                $('catImgActions').style.display = 'flex';
+            } else {
+                $('catPreviewImg').style.display = 'none';
+                $('catUploadPlaceholder').style.display = 'block';
+                $('catImgUpload').classList.remove('has-image');
+                $('catImgActions').style.display = 'none';
+            }
+        }
+
+        function closeCatForm() {
+            $('catModal').classList.remove('active');
+            editingCatId = null;
+            $('cf_image').value = '';
+        }
+
+        function editCat(id) {
+            const cat = allCategories.find(c => c.id === id);
+            if (cat) openCatForm(cat);
+        }
+
+        function removeCatImage() {
+            currentCatImageUrl = '';
+            $('cf_image_url').value = '';
+            $('cf_image').value = '';
+            setCatImageUI('');
+        }
+
+        $('cf_image').onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { toast('Ảnh quá lớn, tối đa 5MB', 'error'); return; }
+            if (!file.type.startsWith('image/')) { toast('Vui lòng chọn file ảnh', 'error'); return; }
+
+            const reader = new FileReader();
+            reader.onload = ev => {
+                $('catPreviewImg').src = ev.target.result;
+                setCatImageUI(ev.target.result);
+            };
+            reader.readAsDataURL(file);
+
+            $('catUploadProgress').textContent = 'Đang tải ảnh lên server...';
+            $('catUploadProgress').classList.add('show');
+            $('saveCatBtn').disabled = true;
+
+            try {
+                const ext = file.name.split('.').pop();
+                const filename = `cat_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+                // Thử dùng bucket category-images trước, nếu không có thì dùng acc-images
+                let bucket = CAT_BUCKET;
+                let { data, error } = await db.storage.from(bucket).upload(filename, file, { cacheControl: '3600', upsert: false });
+                if (error && error.message.includes('Bucket not found')) {
+                    bucket = STORAGE_BUCKET;
+                    ({ data, error } = await db.storage.from(bucket).upload(filename, file, { cacheControl: '3600', upsert: false }));
+                }
+                if (error) throw error;
+                const { data: urlData } = db.storage.from(bucket).getPublicUrl(filename);
+                currentCatImageUrl = urlData.publicUrl;
+                $('cf_image_url').value = currentCatImageUrl;
+                $('catPreviewImg').src = currentCatImageUrl;
+                $('catUploadProgress').textContent = '✓ Đã tải ảnh lên thành công';
+                setTimeout(() => $('catUploadProgress').classList.remove('show'), 2000);
+            } catch (err) {
+                toast('Lỗi tải ảnh: ' + err.message, 'error');
+                $('catUploadProgress').classList.remove('show');
+                removeCatImage();
+            } finally {
+                $('saveCatBtn').disabled = false;
+            }
+        };
+
+        $('saveCatBtn').onclick = async () => {
+            const name = $('cf_name').value.trim();
+            if (!name) { toast('Vui lòng nhập tên danh mục', 'error'); return; }
+
+            const payload = {
+                name,
+                description: $('cf_desc').value.trim() || null,
+                image_url: currentCatImageUrl || null
+            };
+
+            let result;
+            if (editingCatId) {
+                result = await db.from('categories').update(payload).eq('id', editingCatId);
+            } else {
+                result = await db.from('categories').insert([payload]);
+            }
+
+            if (result.error) { toast('Lỗi: ' + result.error.message, 'error'); return; }
+
+            if (oldCatImageUrl && oldCatImageUrl !== currentCatImageUrl) deleteImgFromStorage(oldCatImageUrl);
+
+            toast(editingCatId ? 'Đã cập nhật danh mục' : 'Đã thêm danh mục mới');
+            closeCatForm();
+            await loadCategories();
+            renderAccTable(); // re-render acc table để cập nhật cat names
+        }
+
+        function askDeleteCat(id) {
+            deletingCat = allCategories.find(c => c.id === id);
+            $('deleteCatModal').classList.add('active');
+        }
+        function closeDeleteCat() { $('deleteCatModal').classList.remove('active'); deletingCat = null; }
+
+        $('confirmDeleteCatBtn').onclick = async () => {
+            if (!deletingCat) return;
+            const { error } = await db.from('categories').delete().eq('id', deletingCat.id);
+            if (error) { toast('Lỗi xóa: ' + error.message, 'error'); return; }
+            if (deletingCat.image_url) deleteImgFromStorage(deletingCat.image_url);
+            toast('Đã xóa danh mục');
+            closeDeleteCat();
+            await loadCategories();
+        };
+
+        /* ── ACCOUNTS ── */
+        async function loadAccounts() {
+            const { data, error } = await db.from('accounts').select('*').order('created_at', { ascending: false });
+            if (error) { toast('Lỗi tải dữ liệu: ' + error.message, 'error'); return; }
+            allAccounts = data || [];
+            updateAccStats();
+            populateGameFilter();
+            renderAccTable();
+            renderCatGrid(); // update acc counts in cat cards
+        }
+
+        function updateAccStats() {
+            const total = allAccounts.length;
+            const active = allAccounts.filter(a => a.is_active).length;
+            $('statTotal').textContent = total;
+            $('statActive').textContent = active;
+            $('statSold').textContent = total - active;
+            $('statValue').textContent = formatPrice(allAccounts.filter(a => a.is_active).reduce((s, a) => s + (a.price || 0), 0));
+        }
+
+        function populateGameFilter() {
+            const games = [...new Set(allAccounts.map(a => a.game).filter(Boolean))];
+            $('filterGame').innerHTML = '<option value="all">Tất cả game</option>' +
+                games.map(g => `<option value="${g}">${g}</option>`).join('');
+            $('gameList').innerHTML = games.map(g => `<option value="${g}">`).join('');
+        }
+
+        function getCatName(id) {
+            if (!id) return null;
+            const cat = allCategories.find(c => c.id == id);
+            return cat ? cat.name : null;
+        }
+
+        function renderAccTable() {
+            const search = $('searchBox').value.toLowerCase();
+            const catFilter = $('filterCategory').value;
+            const gameFilter = $('filterGame').value;
+            const statusFilter = $('filterStatus').value;
+
+            let filtered = allAccounts.filter(a => {
+                if (catFilter !== 'all') {
+                    if (catFilter === 'none' && a.category_id) return false;
+                    if (catFilter !== 'none' && String(a.category_id) !== catFilter) return false;
+                }
+                if (gameFilter !== 'all' && a.game !== gameFilter) return false;
+                if (statusFilter === 'active' && !a.is_active) return false;
+                if (statusFilter === 'inactive' && a.is_active) return false;
+                if (search) {
+                    const text = [a.short_desc, a.full_desc, a.game].filter(Boolean).join(' ').toLowerCase();
+                    if (!text.includes(search)) return false;
+                }
+                return true;
+            });
+
+            const tbody = $('accTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7"><div class="empty"><div class="icon">⌧</div>Không có acc nào</div></td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(a => {
+                const catName = getCatName(a.category_id);
+                return `
+        <tr>
+            <td class="mobile-full">
+                ${a.image_url
+                        ? `<img src="${a.image_url}" class="cell-img" alt="" onerror="this.outerHTML='<div class=&quot;cell-img-placeholder&quot;>Lỗi</div>'">`
+                        : `<div class="cell-img-placeholder">No img</div>`
+                    }
+            </td>
+            <td data-label="Mô tả"><div class="cell-desc">${a.short_desc || '<em style="color:var(--text-muted)">Không có mô tả</em>'}</div></td>
+            <td data-label="Danh mục">${catName ? `<span class="cell-cat">${catName}</span>` : '<span style="color:var(--text-muted);font-size:12px;">—</span>'}</td>
+            <td data-label="Game"><span class="cell-game">${a.game || '—'}</span></td>
+            <td data-label="Giá" class="cell-price">${formatPrice(a.price)}</td>
+            <td data-label="Trạng thái">
+                ${a.is_active
+                        ? `<span class="status-badge status-badge-active"><span class="status-dot status-active"></span>Đang bán</span>`
+                        : `<span class="status-badge status-badge-sold"><span class="status-dot status-sold-dot"></span>Đã bán</span>`
+                    }
+            </td>
+            <td class="mobile-hide-label">
+                <div class="actions">
+                    <button class="btn btn-ghost btn-sm" onclick="editAcc(${a.id})">Sửa</button>
+                    <button class="btn btn-danger btn-sm" onclick="askDeleteAcc(${a.id})">Xóa</button>
+                </div>
+            </td>
+        </tr>`;
+            }).join('');
+        }
+
+        $('searchBox').oninput = renderAccTable;
+        $('filterCategory').onchange = renderAccTable;
+        $('filterGame').onchange = renderAccTable;
+        $('filterStatus').onchange = renderAccTable;
+
+        /* Acc form */
+        $('addAccBtn').onclick = () => openAccForm();
+
+        function openAccForm(acc = null) {
+            editingAccId = acc ? acc.id : null;
+            $('accModalTitle').textContent = acc ? 'Sửa acc' : 'Thêm acc mới';
+            $('f_game').value = acc?.game || '';
+            $('f_short_desc').value = acc?.short_desc || '';
+            $('f_full_desc').value = acc?.full_desc || '';
+            $('f_price').value = acc?.price || '';
+            $('f_category').value = acc?.category_id || '';
+            document.querySelector(`input[name="f_status"][value="${acc?.is_active !== false ? 'active' : 'sold'}"]`).checked = true;
+            currentAccImageUrl = acc?.image_url || '';
+            oldAccImageUrl = acc?.image_url || '';
+            $('f_image_url').value = currentAccImageUrl;
+            setAccImageUI(currentAccImageUrl);
+            $('accUploadProgress').classList.remove('show');
+            $('accModal').classList.add('active');
+        }
+
+        function setAccImageUI(url) {
+            if (url) {
+                $('accPreviewImg').src = url;
+                $('accPreviewImg').style.display = 'block';
+                $('accUploadPlaceholder').style.display = 'none';
+                $('accImgUpload').classList.add('has-image');
+                $('accImgActions').style.display = 'flex';
+            } else {
+                $('accPreviewImg').style.display = 'none';
+                $('accUploadPlaceholder').style.display = 'block';
+                $('accImgUpload').classList.remove('has-image');
+                $('accImgActions').style.display = 'none';
+            }
+        }
+
+        function closeAccForm() {
+            $('accModal').classList.remove('active');
+            editingAccId = null;
+            $('f_image').value = '';
+        }
+
+        function editAcc(id) {
+            const acc = allAccounts.find(a => a.id === id);
+            if (acc) openAccForm(acc);
+        }
+
+        function removeAccImage() {
+            currentAccImageUrl = '';
+            $('f_image_url').value = '';
+            $('f_image').value = '';
+            setAccImageUI('');
+        }
+
+        $('f_image').onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { toast('Ảnh quá lớn, tối đa 5MB', 'error'); return; }
+            if (!file.type.startsWith('image/')) { toast('Vui lòng chọn file ảnh', 'error'); return; }
+
+            const reader = new FileReader();
+            reader.onload = ev => {
+                $('accPreviewImg').src = ev.target.result;
+                setAccImageUI(ev.target.result);
+            };
+            reader.readAsDataURL(file);
+
+            $('accUploadProgress').textContent = 'Đang tải ảnh lên server...';
+            $('accUploadProgress').classList.add('show');
+            $('saveAccBtn').disabled = true;
+
+            try {
+                const ext = file.name.split('.').pop();
+                const filename = `acc_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+                const { data, error } = await db.storage.from(STORAGE_BUCKET).upload(filename, file, { cacheControl: '3600', upsert: false });
+                if (error) throw error;
+                const { data: urlData } = db.storage.from(STORAGE_BUCKET).getPublicUrl(filename);
+                currentAccImageUrl = urlData.publicUrl;
+                $('f_image_url').value = currentAccImageUrl;
+                $('accPreviewImg').src = currentAccImageUrl;
+                $('accUploadProgress').textContent = '✓ Đã tải ảnh lên thành công';
+                setTimeout(() => $('accUploadProgress').classList.remove('show'), 2000);
+            } catch (err) {
+                toast('Lỗi tải ảnh: ' + err.message, 'error');
+                $('accUploadProgress').classList.remove('show');
+                removeAccImage();
+            } finally {
+                $('saveAccBtn').disabled = false;
+            }
+        };
+
+        $('saveAccBtn').onclick = async () => {
+            const game = $('f_game').value.trim();
+            const shortDesc = $('f_short_desc').value.trim();
+            const price = parseInt($('f_price').value) || 0;
+
+            if (!game || !shortDesc || !price) {
+                toast('Vui lòng nhập đủ Game, Mô tả ngắn và Giá', 'error');
+                return;
+            }
+
+            const catVal = $('f_category').value;
+            const payload = {
+                game,
+                short_desc: shortDesc,
+                full_desc: $('f_full_desc').value.trim() || '',
+                price,
+                image_url: currentAccImageUrl || null,
+                is_active: document.querySelector('input[name="f_status"]:checked').value === 'active',
+                category_id: catVal ? parseInt(catVal) : null
+            };
+
+            let result;
+            if (editingAccId) {
+                result = await db.from('accounts').update(payload).eq('id', editingAccId);
+            } else {
+                result = await db.from('accounts').insert([payload]);
+            }
+
+            if (result.error) { toast('Lỗi: ' + result.error.message, 'error'); return; }
+            if (oldAccImageUrl && oldAccImageUrl !== currentAccImageUrl) deleteImgFromStorage(oldAccImageUrl);
+
+            toast(editingAccId ? 'Đã cập nhật acc' : 'Đã thêm acc mới');
+            closeAccForm();
+            await loadAccounts();
+        };
+
+        function askDeleteAcc(id) {
+            deletingAcc = allAccounts.find(a => a.id === id);
+            $('deleteAccModal').classList.add('active');
+        }
+        function closeDeleteAcc() { $('deleteAccModal').classList.remove('active'); deletingAcc = null; }
+
+        $('confirmDeleteAccBtn').onclick = async () => {
+            if (!deletingAcc) return;
+            const { error } = await db.from('accounts').delete().eq('id', deletingAcc.id);
+            if (error) { toast('Lỗi xóa: ' + error.message, 'error'); return; }
+            if (deletingAcc.image_url) deleteImgFromStorage(deletingAcc.image_url);
+            toast('Đã xóa acc');
+            closeDeleteAcc();
+            await loadAccounts();
+        };
+
+        /* ── Storage helpers ── */
+        function getFilenameFromUrl(url) {
+            if (!url) return null;
+            try {
+                // Try both buckets
+                for (const bucket of [STORAGE_BUCKET, CAT_BUCKET]) {
+                    const parts = url.split(`/${bucket}/`);
+                    if (parts[1]) return { bucket, filename: parts[1] };
+                }
+            } catch { return null; }
+            return null;
+        }
+
+        async function deleteImgFromStorage(url) {
+            const info = getFilenameFromUrl(url);
+            if (!info) return;
+            try { await db.storage.from(info.bucket).remove([info.filename]); }
+            catch (err) { console.warn('Không xóa được ảnh cũ:', err); }
+        }
+
+        /* ── Close modals on overlay click ── */
+        ['accModal', 'catModal', 'deleteAccModal', 'deleteCatModal'].forEach(id => {
+            $(id).addEventListener('click', function (e) {
+                if (e.target === this) {
+                    if (id === 'accModal') closeAccForm();
+                    else if (id === 'catModal') closeCatForm();
+                    else if (id === 'deleteAccModal') closeDeleteAcc();
+                    else if (id === 'deleteCatModal') closeDeleteCat();
+                }
+            });
+        });
+
+        checkSession();
+    </script>
+</body>
+
+</html>
