@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Linh Vực Cầu Sinh</title>
+<meta name="description" content="Linh Vực Cầu Sinh — game tu tiên sinh tồn màn hình ngang: chặt cây, chế tạo, dựng trại qua đêm, tu luyện đột phá, chinh phục bốn bí cảnh.">
+<meta name="theme-color" content="#0e0d0b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="game">
+  <canvas id="cv" aria-label="Màn hình trò chơi"></canvas>
+  <div id="fade"></div>
+  <div id="hud" hidden>
+    <div class="hud-tl">
+      <div class="stats">
+        <div class="realm" id="h-realm"></div>
+        <div class="bar hp" id="b-hp" title="Sinh lực"><i></i><span></span></div>
+        <div class="bar mp" id="b-mp" title="Linh lực"><i></i><span></span></div>
+        <div class="bar food" id="b-food" title="No bụng"><i></i><span></span></div>
+        <div class="bar tv" id="b-tv" title="Tu vi"><i></i><span></span></div>
+      </div>
+      <div class="goal" id="h-goal"></div>
+    </div>
+    <div class="hud-tc">
+      <canvas id="minimap" width="320" height="16" aria-label="Bản đồ nhỏ"></canvas>
+      <div id="bossbar" class="bossbar" hidden><div class="bn"></div><div class="bar boss"><i></i></div></div>
+    </div>
+    <div class="hud-tr">
+      <div class="clock" id="h-clock"></div>
+      <div class="hud-btns">
+        <button class="hbtn" data-ui="inv" title="Túi đồ &amp; chế tạo (Tab)" aria-label="Túi đồ">🎒</button>
+        <button class="hbtn" data-ui="pause" title="Tạm dừng (Esc)" aria-label="Tạm dừng">❚❚</button>
+      </div>
+    </div>
+    <div id="toasts" aria-live="polite"></div>
+    <div id="banner" class="banner"></div>
+    <div class="hud-bc">
+      <div id="prompt" hidden></div>
+      <div class="held" id="held-name"></div>
+      <div class="hotbar" id="hotbar"></div>
+    </div>
+    <div id="touch">
+      <div class="t-left">
+        <button data-touch="left" aria-label="Sang trái">◀</button>
+        <button data-touch="right" aria-label="Sang phải">▶</button>
+      </div>
+      <div class="t-right">
+        <button data-touch="meditate" class="sm t-med">Thiền</button>
+        <button data-touch="interact" class="sm t-act" id="t-act">E</button>
+        <button data-touch="use" class="sm t-use">Dùng</button>
+        <button data-touch="skill" class="sm t-skill" id="t-skill">Phép</button>
+        <button data-touch="dash" class="sm t-dash" id="t-dash">Lướt</button>
+        <button data-touch="attack" class="big t-atk">Chém</button>
+        <button data-touch="jump" class="big t-jump">Nhảy</button>
+      </div>
+    </div>
+  </div>
+  <div id="panel" hidden></div>
+  <div id="screen" class="screen" hidden></div>
+  <div id="rotate"><div class="rot-ic">↻</div><p>Xoay ngang điện thoại để chơi</p></div>
+</div>
+<noscript><p style="color:#efe7d2;padding:16px">Trò chơi cần bật JavaScript.</p></noscript>
+<script src="js/util.js"></script>
+<script src="js/data.js"></script>
+<script src="js/world.js"></script>
+<script src="js/inventory.js"></script>
+<script src="js/input.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/game.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
